@@ -1,0 +1,858 @@
+{
+    "weight": 3369045,
+    "left": {
+        "weight": 1380890,
+        "left": {
+            "weight": 657737,
+            "left": {
+                "element": 101,
+                "weight": 325664
+            },
+            "right": {
+                "weight": 332073,
+                "left": {
+                    "element": 105,
+                    "weight": 165211
+                },
+                "right": {
+                    "element": 110,
+                    "weight": 166862
+                }
+            }
+        },
+        "right": {
+            "weight": 723153,
+            "left": {
+                "weight": 378531,
+                "left": {
+                    "element": 111,
+                    "weight": 180974
+                },
+                "right": {
+                    "weight": 197557,
+                    "left": {
+                        "element": 108,
+                        "weight": 97113
+                    },
+                    "right": {
+                        "weight": 100444,
+                        "left": {
+                            "element": 44,
+                            "weight": 48780
+                        },
+                        "right": {
+                            "weight": 51664,
+                            "left": {
+                                "weight": 24987,
+                                "left": {
+                                    "element": 84,
+                                    "weight": 12571
+                                },
+                                "right": {
+                                    "weight": 12416,
+                                    "left": {
+                                        "element": 77,
+                                        "weight": 6212
+                                    },
+                                    "right": {
+                                        "weight": 6204,
+                                        "left": {
+                                            "element": 78,
+                                            "weight": 3060
+                                        },
+                                        "right": {
+                                            "element": 148,
+                                            "weight": 3144
+                                        }
+                                    }
+                                }
+                            },
+                            "right": {
+                                "weight": 26677,
+                                "left": {
+                                    "weight": 12974,
+                                    "left": {
+                                        "element": 72,
+                                        "weight": 6603
+                                    },
+                                    "right": {
+                                        "weight": 6371,
+                                        "left": {
+                                            "element": 87,
+                                            "weight": 3177
+                                        },
+                                        "right": {
+                                            "element": 66,
+                                            "weight": 3194
+                                        }
+                                    }
+                                },
+                                "right": {
+                                    "weight": 13703,
+                                    "left": {
+                                        "weight": 6802,
+                                        "left": {
+                                            "element": 106,
+                                            "weight": 3391
+                                        },
+                                        "right": {
+                                            "element": 79,
+                                            "weight": 3411
+                                        }
+                                    },
+                                    "right": {
+                                        "weight": 6901,
+                                        "left": {
+                                            "element": 80,
+                                            "weight": 3426
+                                        },
+                                        "right": {
+                                            "weight": 3475,
+                                            "left": {
+                                                "element": 68,
+                                                "weight": 1758
+                                            },
+                                            "right": {
+                                                "weight": 1717,
+                                                "left": {
+                                                    "element": 85,
+                                                    "weight": 904
+                                                },
+                                                "right": {
+                                                    "weight": 813,
+                                                    "left": {
+                                                        "element": 56,
+                                                        "weight": 404
+                                                    },
+                                                    "right": {
+                                                        "weight": 409,
+                                                        "left": {
+                                                            "element": 48,
+                                                            "weight": 205
+                                                        },
+                                                        "right": {
+                                                            "weight": 204,
+                                                            "left": {
+                                                                "element": 166,
+                                                                "weight": 107
+                                                            },
+                                                            "right": {
+                                                                "weight": 97,
+                                                                "left": {
+                                                                    "element": 167,
+                                                                    "weight": 48
+                                                                },
+                                                                "right": {
+                                                                    "weight": 49,
+                                                                    "left": {
+                                                                        "element": 34,
+                                                                        "weight": 22
+                                                                    },
+                                                                    "right": {
+                                                                        "element": 124,
+                                                                        "weight": 27
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "right": {
+                "weight": 344622,
+                "left": {
+                    "element": 104,
+                    "weight": 170220
+                },
+                "right": {
+                    "weight": 174402,
+                    "left": {
+                        "weight": 82431,
+                        "left": {
+                            "element": 112,
+                            "weight": 39940
+                        },
+                        "right": {
+                            "weight": 42491,
+                            "left": {
+                                "element": 226,
+                                "weight": 21243
+                            },
+                            "right": {
+                                "element": 128,
+                                "weight": 21248
+                            }
+                        }
+                    },
+                    "right": {
+                        "weight": 91971,
+                        "left": {
+                            "element": 103,
+                            "weight": 46029
+                        },
+                        "right": {
+                            "weight": 45942,
+                            "left": {
+                                "element": 118,
+                                "weight": 24047
+                            },
+                            "right": {
+                                "weight": 21895,
+                                "left": {
+                                    "weight": 11627,
+                                    "left": {
+                                        "element": 59,
+                                        "weight": 5885
+                                    },
+                                    "right": {
+                                        "weight": 5742,
+                                        "left": {
+                                            "element": 70,
+                                            "weight": 2766
+                                        },
+                                        "right": {
+                                            "element": 63,
+                                            "weight": 2976
+                                        }
+                                    }
+                                },
+                                "right": {
+                                    "weight": 10268,
+                                    "left": {
+                                        "weight": 5015,
+                                        "left": {
+                                            "element": 58,
+                                            "weight": 2501
+                                        },
+                                        "right": {
+                                            "element": 71,
+                                            "weight": 2514
+                                        }
+                                    },
+                                    "right": {
+                                        "weight": 5253,
+                                        "left": {
+                                            "weight": 2719,
+                                            "left": {
+                                                "element": 169,
+                                                "weight": 1327
+                                            },
+                                            "right": {
+                                                "weight": 1392,
+                                                "left": {
+                                                    "element": 49,
+                                                    "weight": 693
+                                                },
+                                                "right": {
+                                                    "weight": 699,
+                                                    "left": {
+                                                        "weight": 339,
+                                                        "left": {
+                                                            "element": 42,
+                                                            "weight": 169
+                                                        },
+                                                        "right": {
+                                                            "element": 41,
+                                                            "weight": 170
+                                                        }
+                                                    },
+                                                    "right": {
+                                                        "weight": 360,
+                                                        "left": {
+                                                            "element": 40,
+                                                            "weight": 170
+                                                        },
+                                                        "right": {
+                                                            "element": 53,
+                                                            "weight": 190
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "right": {
+                                            "weight": 2534,
+                                            "left": {
+                                                "element": 89,
+                                                "weight": 1239
+                                            },
+                                            "right": {
+                                                "weight": 1295,
+                                                "left": {
+                                                    "weight": 661,
+                                                    "left": {
+                                                        "element": 88,
+                                                        "weight": 333
+                                                    },
+                                                    "right": {
+                                                        "weight": 328,
+                                                        "left": {
+                                                            "element": 93,
+                                                            "weight": 164
+                                                        },
+                                                        "right": {
+                                                            "element": 91,
+                                                            "weight": 164
+                                                        }
+                                                    }
+                                                },
+                                                "right": {
+                                                    "weight": 634,
+                                                    "left": {
+                                                        "element": 75,
+                                                        "weight": 320
+                                                    },
+                                                    "right": {
+                                                        "weight": 314,
+                                                        "left": {
+                                                            "element": 52,
+                                                            "weight": 160
+                                                        },
+                                                        "right": {
+                                                            "weight": 154,
+                                                            "left": {
+                                                                "weight": 75,
+                                                                "left": {
+                                                                    "element": 188,
+                                                                    "weight": 37
+                                                                },
+                                                                "right": {
+                                                                    "element": 197,
+                                                                    "weight": 38
+                                                                }
+                                                            },
+                                                            "right": {
+                                                                "weight": 79,
+                                                                "left": {
+                                                                    "element": 174,
+                                                                    "weight": 39
+                                                                },
+                                                                "right": {
+                                                                    "weight": 40,
+                                                                    "left": {
+                                                                        "weight": 21,
+                                                                        "left": {
+                                                                            "element": 187,
+                                                                            "weight": 10
+                                                                        },
+                                                                        "right": {
+                                                                            "weight": 11,
+                                                                            "left": {
+                                                                                "element": 171,
+                                                                                "weight": 5
+                                                                            },
+                                                                            "right": {
+                                                                                "element": 47,
+                                                                                "weight": 6
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    "right": {
+                                                                        "weight": 19,
+                                                                        "left": {
+                                                                            "element": 134,
+                                                                            "weight": 10
+                                                                        },
+                                                                        "right": {
+                                                                            "weight": 9,
+                                                                            "left": {
+                                                                                "element": 43,
+                                                                                "weight": 5
+                                                                            },
+                                                                            "right": {
+                                                                                "weight": 4,
+                                                                                "left": {
+                                                                                    "weight": 2,
+                                                                                    "left": {
+                                                                                        "element": 37,
+                                                                                        "weight": 1
+                                                                                    },
+                                                                                    "right": {
+                                                                                        "element": 38,
+                                                                                        "weight": 1
+                                                                                    }
+                                                                                },
+                                                                                "right": {
+                                                                                    "weight": 2,
+                                                                                    "left": {
+                                                                                        "element": 194,
+                                                                                        "weight": 1
+                                                                                    },
+                                                                                    "right": {
+                                                                                        "element": 123,
+                                                                                        "weight": 1
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "right": {
+        "weight": 1988155,
+        "left": {
+            "weight": 1109934,
+            "left": {
+                "element": 32,
+                "weight": 516353
+            },
+            "right": {
+                "weight": 593581,
+                "left": {
+                    "weight": 286071,
+                    "left": {
+                        "element": 114,
+                        "weight": 145091
+                    },
+                    "right": {
+                        "weight": 140980,
+                        "left": {
+                            "element": 117,
+                            "weight": 67391
+                        },
+                        "right": {
+                            "element": 13,
+                            "weight": 73589
+                        }
+                    }
+                },
+                "right": {
+                    "weight": 307510,
+                    "left": {
+                        "element": 115,
+                        "weight": 157632
+                    },
+                    "right": {
+                        "weight": 149878,
+                        "left": {
+                            "element": 10,
+                            "weight": 73589
+                        },
+                        "right": {
+                            "weight": 76289,
+                            "left": {
+                                "element": 121,
+                                "weight": 37944
+                            },
+                            "right": {
+                                "weight": 38345,
+                                "left": {
+                                    "weight": 18396,
+                                    "left": {
+                                        "weight": 9002,
+                                        "left": {
+                                            "element": 83,
+                                            "weight": 4411
+                                        },
+                                        "right": {
+                                            "element": 67,
+                                            "weight": 4591
+                                        }
+                                    },
+                                    "right": {
+                                        "weight": 9394,
+                                        "left": {
+                                            "element": 45,
+                                            "weight": 4700
+                                        },
+                                        "right": {
+                                            "weight": 4694,
+                                            "left": {
+                                                "element": 195,
+                                                "weight": 2296
+                                            },
+                                            "right": {
+                                                "element": 113,
+                                                "weight": 2398
+                                            }
+                                        }
+                                    }
+                                },
+                                "right": {
+                                    "weight": 19949,
+                                    "left": {
+                                        "element": 73,
+                                        "weight": 10109
+                                    },
+                                    "right": {
+                                        "weight": 9840,
+                                        "left": {
+                                            "element": 69,
+                                            "weight": 4939
+                                        },
+                                        "right": {
+                                            "weight": 4901,
+                                            "left": {
+                                                "element": 74,
+                                                "weight": 2447
+                                            },
+                                            "right": {
+                                                "element": 76,
+                                                "weight": 2454
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "right": {
+            "weight": 878221,
+            "left": {
+                "weight": 413449,
+                "left": {
+                    "element": 97,
+                    "weight": 199732
+                },
+                "right": {
+                    "weight": 213717,
+                    "left": {
+                        "element": 100,
+                        "weight": 106966
+                    },
+                    "right": {
+                        "weight": 106751,
+                        "left": {
+                            "element": 119,
+                            "weight": 53330
+                        },
+                        "right": {
+                            "element": 102,
+                            "weight": 53421
+                        }
+                    }
+                }
+            },
+            "right": {
+                "weight": 464772,
+                "left": {
+                    "element": 116,
+                    "weight": 223000
+                },
+                "right": {
+                    "weight": 241772,
+                    "left": {
+                        "weight": 127488,
+                        "left": {
+                            "element": 99,
+                            "weight": 62741
+                        },
+                        "right": {
+                            "weight": 64747,
+                            "left": {
+                                "element": 46,
+                                "weight": 30480
+                            },
+                            "right": {
+                                "element": 98,
+                                "weight": 34267
+                            }
+                        }
+                    },
+                    "right": {
+                        "weight": 114284,
+                        "left": {
+                            "element": 109,
+                            "weight": 56000
+                        },
+                        "right": {
+                            "weight": 58284,
+                            "left": {
+                                "weight": 28235,
+                                "left": {
+                                    "element": 107,
+                                    "weight": 14107
+                                },
+                                "right": {
+                                    "weight": 14128,
+                                    "left": {
+                                        "element": 157,
+                                        "weight": 7048
+                                    },
+                                    "right": {
+                                        "weight": 7080,
+                                        "left": {
+                                            "element": 33,
+                                            "weight": 3539
+                                        },
+                                        "right": {
+                                            "element": 82,
+                                            "weight": 3541
+                                        }
+                                    }
+                                }
+                            },
+                            "right": {
+                                "weight": 30049,
+                                "left": {
+                                    "weight": 14490,
+                                    "left": {
+                                        "element": 156,
+                                        "weight": 7121
+                                    },
+                                    "right": {
+                                        "element": 65,
+                                        "weight": 7369
+                                    }
+                                },
+                                "right": {
+                                    "weight": 15559,
+                                    "left": {
+                                        "weight": 7400,
+                                        "left": {
+                                            "element": 120,
+                                            "weight": 3693
+                                        },
+                                        "right": {
+                                            "element": 153,
+                                            "weight": 3707
+                                        }
+                                    },
+                                    "right": {
+                                        "weight": 8159,
+                                        "left": {
+                                            "weight": 4281,
+                                            "left": {
+                                                "element": 95,
+                                                "weight": 2070
+                                            },
+                                            "right": {
+                                                "element": 86,
+                                                "weight": 2211
+                                            }
+                                        },
+                                        "right": {
+                                            "weight": 3878,
+                                            "left": {
+                                                "element": 122,
+                                                "weight": 1845
+                                            },
+                                            "right": {
+                                                "weight": 2033,
+                                                "left": {
+                                                    "weight": 919,
+                                                    "left": {
+                                                        "weight": 451,
+                                                        "left": {
+                                                            "element": 152,
+                                                            "weight": 224
+                                                        },
+                                                        "right": {
+                                                            "element": 50,
+                                                            "weight": 227
+                                                        }
+                                                    },
+                                                    "right": {
+                                                        "weight": 468,
+                                                        "left": {
+                                                            "element": 51,
+                                                            "weight": 239
+                                                        },
+                                                        "right": {
+                                                            "weight": 229,
+                                                            "left": {
+                                                                "element": 57,
+                                                                "weight": 114
+                                                            },
+                                                            "right": {
+                                                                "weight": 115,
+                                                                "left": {
+                                                                    "element": 162,
+                                                                    "weight": 56
+                                                                },
+                                                                "right": {
+                                                                    "element": 160,
+                                                                    "weight": 59
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "right": {
+                                                    "weight": 1114,
+                                                    "left": {
+                                                        "weight": 584,
+                                                        "left": {
+                                                            "element": 168,
+                                                            "weight": 293
+                                                        },
+                                                        "right": {
+                                                            "weight": 291,
+                                                            "left": {
+                                                                "element": 137,
+                                                                "weight": 146
+                                                            },
+                                                            "right": {
+                                                                "weight": 145,
+                                                                "left": {
+                                                                    "element": 170,
+                                                                    "weight": 74
+                                                                },
+                                                                "right": {
+                                                                    "weight": 71,
+                                                                    "left": {
+                                                                        "element": 147,
+                                                                        "weight": 35
+                                                                    },
+                                                                    "right": {
+                                                                        "weight": 36,
+                                                                        "left": {
+                                                                            "element": 185,
+                                                                            "weight": 18
+                                                                        },
+                                                                        "right": {
+                                                                            "element": 175,
+                                                                            "weight": 18
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                    "right": {
+                                                        "weight": 530,
+                                                        "left": {
+                                                            "weight": 277,
+                                                            "left": {
+                                                                "element": 81,
+                                                                "weight": 135
+                                                            },
+                                                            "right": {
+                                                                "element": 54,
+                                                                "weight": 142
+                                                            }
+                                                        },
+                                                        "right": {
+                                                            "weight": 253,
+                                                            "left": {
+                                                                "element": 55,
+                                                                "weight": 132
+                                                            },
+                                                            "right": {
+                                                                "weight": 121,
+                                                                "left": {
+                                                                    "element": 90,
+                                                                    "weight": 60
+                                                                },
+                                                                "right": {
+                                                                    "weight": 61,
+                                                                    "left": {
+                                                                        "element": 180,
+                                                                        "weight": 34
+                                                                    },
+                                                                    "right": {
+                                                                        "weight": 27,
+                                                                        "left": {
+                                                                            "weight": 12,
+                                                                            "left": {
+                                                                                "element": 136,
+                                                                                "weight": 6
+                                                                            },
+                                                                            "right": {
+                                                                                "weight": 6,
+                                                                                "left": {
+                                                                                    "element": 146,
+                                                                                    "weight": 3
+                                                                                },
+                                                                                "right": {
+                                                                                    "weight": 3,
+                                                                                    "left": {
+                                                                                        "element": 125,
+                                                                                        "weight": 1
+                                                                                    },
+                                                                                    "right": {
+                                                                                        "element": 177,
+                                                                                        "weight": 2
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        "right": {
+                                                                            "weight": 15,
+                                                                            "left": {
+                                                                                "element": 39,
+                                                                                "weight": 7
+                                                                            },
+                                                                            "right": {
+                                                                                "weight": 8,
+                                                                                "left": {
+                                                                                    "weight": 4,
+                                                                                    "left": {
+                                                                                        "element": 135,
+                                                                                        "weight": 2
+                                                                                    },
+                                                                                    "right": {
+                                                                                        "element": 36,
+                                                                                        "weight": 2
+                                                                                    }
+                                                                                },
+                                                                                "right": {
+                                                                                    "weight": 4,
+                                                                                    "left": {
+                                                                                        "weight": 2,
+                                                                                        "left": {
+                                                                                            "element": 239,
+                                                                                            "weight": 1
+                                                                                        },
+                                                                                        "right": {
+                                                                                            "element": 189,
+                                                                                            "weight": 1
+                                                                                        }
+                                                                                    },
+                                                                                    "right": {
+                                                                                        "weight": 2,
+                                                                                        "left": {
+                                                                                            "element": 191,
+                                                                                            "weight": 1
+                                                                                        },
+                                                                                        "right": {
+                                                                                            "element": 35,
+                                                                                            "weight": 1
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
