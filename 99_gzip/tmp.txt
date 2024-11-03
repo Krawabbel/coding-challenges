@@ -1,0 +1,153 @@
+START xyz hello hello hello hello world abc hello world .anfnaslidfnaomwef.anfnaslidfnaomwef.anfnaslidfnaomwef.lasndfjiasdiufn xyzxyz hello hello world abc hello world .anfnaslidfnaomwef.anfnaslidfnaomwef.anfnaslidfnaomwef.lasndfjiasdiufn xyzxyz hello hello world abc hello world .anfnaslidfnaomwef.anfnaslidfnaomwef.anfnaslidfnaomwef.lasndfjiasdiufn xyz
+START xyz hello hello hello hello world abc hello world .anfnaslidfnaomwef.anfnaslidfnaomwef.anfnaslidfnaomwef.lasndfjiasdiufn xyzxyz hello hello world abc hello world .anfnaslidfnaomwef.anfnaslidfnaomwef.anfnaslidfnaomwef.lasndfjiasdiufn xyzxyz hello hello world abc hello world .anfnaslidfnaomwef.anfnaslidfnaomwef.anfnaslidfnaomwef.lasndfjiasdiufn xyz
+11111000 11010001 00010000 00010000 10111001 00111110 11100100 11100110 00000000 11000000 11001110 10110110 10000110 00110110 00110110 01110100 00101110 00011110 00101110 00000000 [INFO] mtime: '2024-11-03 14:37:33 +0100 CET' [50 48 50 52 45 49 49 45 48 51 32 49 52 58 51 55 58 51 51 32 43 48 49 48 48 32 67 69 84]
+[INFO] os: '0x03' [48 120 48 51]
+[INFO] fname: 'small.txt' [115 109 97 108 108 46 116 120 116]
+11010000 011 -> 83 -> 'S'
+10000 100 -> 84 -> 'T'
+01110 001 -> 65 -> 'A'
+10000 010 -> 82 -> 'R'
+10000 100 -> 84 -> 'T'
+01010 000 -> 32 -> ' '
+10101 000 -> 120 -> 'x'
+10101 001 -> 121 -> 'y'
+10101 010 -> 122 -> 'z'
+01010 000 -> 32 -> ' '
+10011 000 -> 104 -> 'h'
+10010 101 -> 101 -> 'e'
+10011 100 -> 108 -> 'l'
+10011 100 -> 108 -> 'l'
+10011 111 -> 111 -> 'o'
+00011 01 -> 269 -> 
+lencode 269
+# extra bits 2
+00
+base length  19
+extra bits  0
+0010 0
+distcode 4
+# extra bits 1
+1
+base dist  5
+extra bits  1
+ -> <length: 19, distance: 6> -> ' ''h''e''l''l''o'' ''h''e''l''l''o'' ''h''e''l''l''o'' '
+101001 11 -> 119 -> 'w'
+100111 11 -> 111 -> 'o'
+101000 10 -> 114 -> 'r'
+100111 00 -> 108 -> 'l'
+100101 00 -> 100 -> 'd'
+010100 00 -> 32 -> ' '
+100100 01 -> 97 -> 'a'
+100100 10 -> 98 -> 'b'
+100100 11 -> 99 -> 'c'
+000101 0 -> 266 -> 
+lencode 266
+# extra bits 1
+0
+base length  13
+extra bits  0
+00111
+distcode 7
+# extra bits 2
+1 1
+base dist  13
+extra bits  3
+ -> <length: 13, distance: 16> -> ' ''h''e''l''l''o'' ''w''o''r''l''d'' '
+0101111 0 -> 46 -> '.'
+1001000 1 -> 97 -> 'a'
+1001111 0 -> 110 -> 'n'
+1001011 0 -> 102 -> 'f'
+1001111 0 -> 110 -> 'n'
+1001000 1 -> 97 -> 'a'
+1010001 1 -> 115 -> 's'
+1001110 0 -> 108 -> 'l'
+1001100 1 -> 105 -> 'i'
+1001010 0 -> 100 -> 'd'
+0000001  -> 257 -> 
+lencode 257
+# extra bits 0
+
+base length  3
+extra bits  0
+00101
+distcode 5
+# extra bits 1
+0
+base dist  7
+extra bits  0
+ -> <length: 3, distance: 7> -> 'f''n''a'
+10 011111 -> 111 -> 'o'
+10 011101 -> 109 -> 'm'
+10 100111 -> 119 -> 'w'
+10 010101 -> 101 -> 'e'
+10 010110 -> 102 -> 'f'
+00 10001 -> 273 -> 
+lencode 273
+# extra bits 3
+010 
+base length  35
+extra bits  2
+01000
+distcode 8
+# extra bits 3
+100 
+base dist  17
+extra bits  1
+ -> <length: 37, distance: 18> -> '.''a''n''f''n''a''s''l''i''d''f''n''a''o''m''w''e''f''.''a''n''f''n''a''s''l''i''d''f''n''a''o''m''w''e''f''.'
+10011100  -> 108 -> 'l'
+10010001  -> 97 -> 'a'
+10100011  -> 115 -> 's'
+10011110  -> 110 -> 'n'
+10010100  -> 100 -> 'd'
+10010110  -> 102 -> 'f'
+10011010  -> 106 -> 'j'
+10011001  -> 105 -> 'i'
+10010001  -> 97 -> 'a'
+10100011  -> 115 -> 's'
+10010100  -> 100 -> 'd'
+10011001  -> 105 -> 'i'
+10100101  -> 117 -> 'u'
+10010110  -> 102 -> 'f'
+10011110  -> 110 -> 'n'
+0000010 -> 258 -> 
+lencode 258
+# extra bits 0
+
+base length  4
+extra bits  0
+0 1101
+distcode 13
+# extra bits 5
+0001 1
+base dist  97
+extra bits  24
+ -> <length: 4, distance: 121> -> ' ''x''y''z'
+0001011  -> 267 -> 
+lencode 267
+# extra bits 1
+1
+base length  15
+extra bits  1
+01101
+distcode 13
+# extra bits 5
+11 011
+base dist  97
+extra bits  27
+ -> <length: 16, distance: 124> -> 'x''y''z'' ''h''e''l''l''o'' ''h''e''l''l''o'' '
+11000 011 -> 283 -> 
+lencode 283
+# extra bits 5
+10110 
+base length  195
+extra bits  13
+01101
+distcode 13
+# extra bits 5
+111 10
+base dist  97
+extra bits  15
+ -> <length: 208, distance: 112> -> 'w''o''r''l''d'' ''a''b''c'' ''h''e''l''l''o'' ''w''o''r''l''d'' ''.''a''n''f''n''a''s''l''i''d''f''n''a''o''m''w''e''f''.''a''n''f''n''a''s''l''i''d''f''n''a''o''m''w''e''f''.''a''n''f''n''a''s''l''i''d''f''n''a''o''m''w''e''f''.''l''a''s''n''d''f''j''i''a''s''d''i''u''f''n'' ''x''y''z''x''y''z'' ''h''e''l''l''o'' ''h''e''l''l''o'' ''w''o''r''l''d'' ''a''b''c'' ''h''e''l''l''o'' ''w''o''r''l''d'' ''.''a''n''f''n''a''s''l''i''d''f''n''a''o''m''w''e''f''.''a''n''f''n''a''s''l''i''d''f''n''a''o''m''w''e''f''.''a''n''f''n''a''s''l''i''d''f''n''a''o''m''w''e''f''.''l''a''s''n''d''f''j''i''a''s''d''i''u''f''n'' ''x''y''z'
+001110 10 -> 10 -> '
+'
+000000 0 -> 256 -> end-of-block
