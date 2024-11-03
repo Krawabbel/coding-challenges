@@ -4,46 +4,23 @@ import (
 	"fmt"
 )
 
-var (
-	fixedHuffmanCodes *huffmanNode
-	// fixedHuffmanDistanceCodes *huffmanNode
-)
-
-// func initFixedHuffmanDistanceCodes() {
-// 	fixedHuffmanDistanceLengths := make([]int, 32)
-// 	for i := range fixedHuffmanDistanceLengths {
-// 		fixedHuffmanDistanceLengths[i] = 5
-// 	}
-// 	fixedHuffmanDistanceCodes = genTree(fixedHuffmanDistanceLengths)
-// }
-
-func initFixedHuffmanCodes() (err error) {
-	fixedHuffmanCodeLengths := make([]int, 288)
-	for i := 0; i <= 143; i++ {
-		fixedHuffmanCodeLengths[i] = 8
-	}
-	for i := 144; i <= 255; i++ {
-		fixedHuffmanCodeLengths[i] = 9
-	}
-	for i := 256; i <= 279; i++ {
-		fixedHuffmanCodeLengths[i] = 7
-	}
-	for i := 280; i <= 287; i++ {
-		fixedHuffmanCodeLengths[i] = 8
-	}
-
-	fixedHuffmanCodes, err = genTree(fixedHuffmanCodeLengths)
-
-	return err
-}
-
 type huffmanNode struct {
 	element     uint64
 	isLeaf      bool
 	left, right *huffmanNode
 }
 
-func (n *huffmanNode) insert(code string, element uint64) error {
+func (node *huffmanNode) getElement(s *bitstream) uint64 {
+	if node.isLeaf {
+		return node.element
+	}
+	if s.nextBool() {
+		return node.right.getElement(s)
+	}
+	return node.left.getElement(s)
+}
+
+func (n *huffmanNode) insertElement(code string, element uint64) error {
 
 	if len(code) > 0 {
 		if n.isLeaf {
@@ -54,12 +31,12 @@ func (n *huffmanNode) insert(code string, element uint64) error {
 			if n.left == nil {
 				n.left = new(huffmanNode)
 			}
-			return n.left.insert(code[1:], element)
+			return n.left.insertElement(code[1:], element)
 		case '1':
 			if n.right == nil {
 				n.right = new(huffmanNode)
 			}
-			return n.right.insert(code[1:], element)
+			return n.right.insertElement(code[1:], element)
 		default:
 			return fmt.Errorf("invalid code")
 		}
@@ -76,32 +53,7 @@ func (n *huffmanNode) insert(code string, element uint64) error {
 	return nil
 }
 
-func (n *huffmanNode) get(code string) (uint64, error) {
-
-	if n == nil {
-		return 0, fmt.Errorf("code does not exist")
-	}
-
-	if len(code) > 0 {
-		switch code[0] {
-		case '0':
-			return n.left.get(code[1:])
-		case '1':
-			return n.right.get(code[1:])
-		default:
-			return 0, fmt.Errorf("invalid code")
-		}
-
-	}
-
-	if !n.isLeaf {
-		return 0, fmt.Errorf("code does not specify leaf")
-	}
-
-	return n.element, nil
-}
-
-func genTree(lengths []int) (*huffmanNode, error) {
+func generateTree(lengths []int) (*huffmanNode, error) {
 
 	// 1) Count the number of codes for each code length.
 
@@ -137,7 +89,7 @@ func genTree(lengths []int) (*huffmanNode, error) {
 			nextCode[l]++
 			element := uint64(n)
 
-			if err := root.insert(code, element); err != nil {
+			if err := root.insertElement(code, element); err != nil {
 				return nil, err
 			}
 

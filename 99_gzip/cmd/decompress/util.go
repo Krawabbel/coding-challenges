@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func debug(a ...any) {
 	if DEBUG {
@@ -35,4 +37,8 @@ func bits(b byte) []bool {
 		bs[i] = (b & (1 << i)) > 0
 	}
 	return bs
+}
+
+func corruptFileError(format string, a ...any) error {
+	return fmt.Errorf("corrupt GZIP file: "+format, a...)
 }

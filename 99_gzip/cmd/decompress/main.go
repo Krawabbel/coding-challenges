@@ -67,17 +67,18 @@ type decompressor struct {
 	history []byte
 }
 
-func newDecompressor(w io.Writer, data []byte) *decompressor {
+func newDecompressor(writer io.Writer, data []byte) *decompressor {
 	return &decompressor{
 		istream: newBitstream(data),
-		ostream: w,
+		ostream: writer,
 		history: []byte{},
 	}
 }
 
 func (d *decompressor) parseData() error {
-
+	defer debugln("*** END BLOCKS ***")
 	for {
+		debugln("*** START BLOCK ***")
 		if eof, err := d.parseBlock(); err != nil {
 			return err
 		} else if eof {
@@ -86,11 +87,9 @@ func (d *decompressor) parseData() error {
 	}
 }
 
-func corruptFileError(format string, a ...any) error {
-	return fmt.Errorf("corrupt GZIP file: "+format, a...)
-}
-
 func (d *decompressor) parseNoCompression() error {
+
+	debugln(" -> no compression")
 
 	d.istream.skipToNextByte()
 	length := binary.LittleEndian.Uint16(d.istream.nextBytes(2))
@@ -124,33 +123,6 @@ func (d *decompressor) push(bs ...byte) {
 
 }
 
-func (d *decompressor) parseFixedHuffmanCodes() {
-
-	for {
-
-		val := d.parseValue(fixedHuffmanCodes)
-
-		debug(" -> ", val, " -> ")
-
-		if val < 256 {
-			d.push(byte(val)) // literal
-		} else if val == 256 {
-			debugln("end-of-block")
-			break // end-of-block
-		} else {
-			length := d.parseLength(val)
-
-			distance := d.parseDistance()
-
-			debugf(" -> <length: %d, distance: %d> -> ", length, distance)
-
-			d.repeat(len(d.history)-distance, length)
-
-		}
-		debugln()
-	}
-}
-
 func (d *decompressor) repeat(start int, length int) {
 	for offset := range length {
 		ptr := start + offset
@@ -158,80 +130,39 @@ func (d *decompressor) repeat(start int, length int) {
 	}
 }
 
-var baseDistances = []uint64{
-	1, 2, 3, 4, 5, 7, 9, 13, 17, 25,
-	33, 49, 65, 97, 129, 193, 257, 385, 513, 769,
-	1025, 1537, 2049, 3073, 4097, 6145, 8193, 12289, 16385, 24577,
-}
+var clenIdxs = []int{16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15}
 
-func (d *decompressor) parseDistance() int {
-	distcode := d.istream.nextBitsRev(5)
-	if distcode > 29 {
-		panic("unexpected distcode")
+func (d *decompressor) parseDynamicHuffmanCodeLengths() {
+	debugln(" -> dynamic huffman compression")
+
+	{
+		hlit := d.istream.nextBitsRev(5)
+		nlit := int(hlit) + 257
+		debugln(" -> hlit:", hlit, "-> nlit:", nlit)
+	}
+	{
+		hdist := d.istream.nextBitsRev(5)
+		ndist := int(hdist) + 1
+		debugln(" -> hdist:", hdist, "-> ndist:", ndist)
+	}
+	{
+		hclen := d.istream.nextBitsRev(4)
+		nclen := int(hclen) + 4
+		debugln(" -> hclen:", hclen, "-> nclen:", nclen)
+
+		clens := make([]uint64, 19)
+		for _, idx := range clenIdxs {
+			clens[idx] = d.istream.nextBitsRev(3)
+		}
+		debugln(" -> clens:", clens)
 	}
 
-	nExtraBits := 0
-	if distcode > 1 {
-		nExtraBits = int(distcode)/2 - 1
-	}
-
-	debugln("\ndistcode", distcode)
-
-	debugln("# extra bits", nExtraBits)
-
-	extraBits := d.istream.nextBits(nExtraBits)
-
-	debugln("\nbase dist ", baseDistances[distcode])
-	debugln("extra bits ", extraBits)
-
-	return int(baseDistances[distcode] + extraBits)
-}
-
-var baseLengths = []uint64{
-	3, 4, 5, 6, 7, 8, 9, 10,
-	11, 13, 15, 17,
-	19, 23, 27, 31,
-	35, 43, 51, 59,
-	67, 83, 99, 115,
-	131, 163, 195, 227,
-	0,
-}
-
-func (d *decompressor) parseLength(lencode uint64) int {
-
-	if lencode < 257 || lencode > 285 {
-		panic("unexpected lencode")
-	}
-
-	nExtraBits := 0
-	if lencode > 264 {
-		nExtraBits = int(lencode-265)/4 + 1
-	}
-
-	debugln("\nlencode", lencode)
-	debugln("# extra bits", nExtraBits)
-
-	extraBits := d.istream.nextBits(nExtraBits)
-
-	baseLength := baseLengths[lencode-257]
-
-	debugln("\nbase length ", baseLength)
-	debugln("extra bits ", extraBits)
-
-	return int(baseLength + extraBits)
-}
-
-func (d *decompressor) parseValue(node *huffmanNode) uint64 {
-	if node.isLeaf {
-		return node.element
-	}
-	if d.istream.nextBool() {
-		return d.parseValue(node.right)
-	}
-	return d.parseValue(node.left)
 }
 
 func (d *decompressor) parseDynamicHuffmanCodes() {
+
+	d.parseDynamicHuffmanCodeLengths()
+
 	panic("not yet implemented: dynamic Huffman codes")
 }
 
