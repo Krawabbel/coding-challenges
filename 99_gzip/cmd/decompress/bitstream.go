@@ -12,7 +12,7 @@ func newBitstream(data []byte) *bitstream {
 	return s
 }
 
-func (s *bitstream) skipBits() {
+func (s *bitstream) skipToNextByte() {
 	for (s.ptr % 8) > 0 {
 		s.ptr++
 	}

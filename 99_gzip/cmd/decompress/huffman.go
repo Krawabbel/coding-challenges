@@ -17,7 +17,7 @@ var (
 // 	fixedHuffmanDistanceCodes = genTree(fixedHuffmanDistanceLengths)
 // }
 
-func initFixedHuffmanCodes() {
+func initFixedHuffmanCodes() (err error) {
 	fixedHuffmanCodeLengths := make([]int, 288)
 	for i := 0; i <= 143; i++ {
 		fixedHuffmanCodeLengths[i] = 8
@@ -32,7 +32,9 @@ func initFixedHuffmanCodes() {
 		fixedHuffmanCodeLengths[i] = 8
 	}
 
-	fixedHuffmanCodes = genTree(fixedHuffmanCodeLengths)
+	fixedHuffmanCodes, err = genTree(fixedHuffmanCodeLengths)
+
+	return err
 }
 
 type huffmanNode struct {
@@ -99,7 +101,7 @@ func (n *huffmanNode) get(code string) (uint64, error) {
 	return n.element, nil
 }
 
-func genTree(lengths []int) *huffmanNode {
+func genTree(lengths []int) (*huffmanNode, error) {
 
 	// 1) Count the number of codes for each code length.
 
@@ -136,12 +138,12 @@ func genTree(lengths []int) *huffmanNode {
 			element := uint64(n)
 
 			if err := root.insert(code, element); err != nil {
-				panic(err)
+				return nil, err
 			}
 
 			// debugf("symbol: %s Length: %d, Code %"+fmt.Sprint(maxLength)+"s\n", fmt.Sprint(n), l, code)
 		}
 	}
 
-	return root
+	return root, nil
 }

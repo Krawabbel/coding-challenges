@@ -17,15 +17,18 @@ const (
 var DEBUG = true
 
 func init() {
-	initFixedHuffmanCodes()
+	if err := initFixedHuffmanCodes(); err != nil {
+		panic(err)
+	}
 }
 
 func main() {
-	// path := os.Args[1]
-	path := "/home/dominik/projects/coding-challenges/99_gzip/small.txt.gz"
+	// path := "/home/dominik/projects/coding-challenges/99_gzip/small.txt.gz"
 
 	flag.BoolVar(&DEBUG, "debug", false, "debug")
 	flag.Parse()
+
+	path := flag.Arg(0)
 
 	if err := decompress(os.Stdout, path); err != nil {
 		panic(err)
@@ -81,12 +84,27 @@ func (d *decompressor) parseData() error {
 			return nil
 		}
 	}
-
 }
 
-func (d *decompressor) parseNoCompression() {
-	panic("not yet implemented: no compression")
-	d.istream.skipBits()
+func corruptFileError(format string, a ...any) error {
+	return fmt.Errorf("corrupt GZIP file: "+format, a...)
+}
+
+func (d *decompressor) parseNoCompression() error {
+
+	d.istream.skipToNextByte()
+	length := binary.LittleEndian.Uint16(d.istream.nextBytes(2))
+	nLength := binary.LittleEndian.Uint16(d.istream.nextBytes(2))
+
+	if length != ^nLength {
+		return corruptFileError("no-compression check failed")
+	}
+
+	debugf("\nLEN: %04X, NLEN: %04X, sum: %04X\n", length, nLength, length-^nLength)
+
+	d.push(d.istream.nextBytes(int(length))...)
+
+	return nil
 }
 
 func (d *decompressor) push(bs ...byte) {
@@ -203,34 +221,6 @@ func (d *decompressor) parseLength(lencode uint64) int {
 	return int(baseLength + extraBits)
 }
 
-// func (d *decompressor) parseLengthOld(val uint64) int {
-
-// 	defer debugln("|")
-
-// 	switch val {
-// 	case 257, 258, 259, 260, 261, 262, 263, 264:
-// 		return int(val) - 257 + 3
-// 	case 265, 266, 267, 268:
-// 		extra := d.istream.nextBitsRev(1)
-// 		return 2*(int(val)-265) + 11 + int(extra)
-// 	case 269, 270, 271, 272:
-// 		extra := d.istream.nextBitsRev(2)
-// 		return 4*(int(val)-269) + 19 + int(extra)
-// 	case 273, 274, 275, 276:
-// 		extra := d.istream.nextBitsRev(3)
-// 		return 8*(int(val)-273) + 35 + int(extra)
-// 	case 277, 278, 279, 280:
-// 		extra := d.istream.nextBitsRev(4)
-// 		return 16*(int(val)-277) + 67 + int(extra)
-// 	case 281, 282, 283, 284:
-// 		extra := d.istream.nextBitsRev(5)
-// 		return 32*(int(val)-281) + 115 + int(extra)
-// 	case 285:
-// 		return 258
-// 	}
-// 	panic("unexpected length code")
-// }
-
 func (d *decompressor) parseValue(node *huffmanNode) uint64 {
 	if node.isLeaf {
 		return node.element
@@ -254,13 +244,15 @@ func (d *decompressor) parseBlock() (bool, error) {
 
 	switch btype {
 	case 0b00:
-		d.parseNoCompression()
+		if err := d.parseNoCompression(); err != nil {
+			return false, err
+		}
 	case 0b01:
 		d.parseFixedHuffmanCodes()
 	case 0b10:
 		d.parseDynamicHuffmanCodes()
 	case 0b11:
-		return false, fmt.Errorf("not a GZIP file: unexpected BTYPE 0b11")
+		return false, corruptFileError("unexpected BTYPE 0b11")
 	}
 
 	return bfinal, nil
@@ -296,11 +288,11 @@ func (d *decompressor) parseHeader() error {
 	d.info = make(map[string][]byte)
 
 	if magic := d.istream.nextBytes(2); !slices.Equal(magic, []byte{0x1F, 0x8B}) {
-		return fmt.Errorf("not a gzip file: magic numbers [0x%2X 0x%2X] are not [0x1F 0x8B]", magic[0], magic[1])
+		return corruptFileError("magic numbers [0x%2X 0x%2X] are not [0x1F 0x8B]", magic[0], magic[1])
 	}
 
 	if method := d.istream.nextByte(); method != 0x08 {
-		return fmt.Errorf("unexpected compression method %x", method)
+		return corruptFileError("unexpected compression method %x", method)
 	}
 
 	flags := d.istream.nextByte()
@@ -326,14 +318,14 @@ func (d *decompressor) parseHeader() error {
 	}
 
 	if (flags & (0x20 | 0x40 | 0x80)) != 0 {
-		return fmt.Errorf("unexpected flags 0x%02X", flags)
+		return corruptFileError("unexpected flags 0x%02X", flags)
 	}
 
 	mtime := binary.LittleEndian.Uint32(d.istream.nextBytes(4))
 	d.info["mtime"] = []byte(fmt.Sprint(time.Unix(int64(mtime), 0)))
 
 	if extra := d.istream.nextByte(); extra != 0x00 {
-		return fmt.Errorf("unexpected extra flags %x", extra)
+		return corruptFileError("unexpected extra flags %x", extra)
 	}
 
 	d.info["os"] = []byte(fmt.Sprintf("0x%02X", d.istream.nextByte()))
