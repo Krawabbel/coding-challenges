@@ -53,7 +53,15 @@ func (n *huffmanNode) insertElement(code string, element uint64) error {
 	return nil
 }
 
-func generateTree(lengths []int) (*huffmanNode, error) {
+func generateTreeNumbered(lengths []int) (*huffmanNode, error) {
+	elements := make([]uint64, len(lengths))
+	for i := range elements {
+		elements[i] = uint64(i)
+	}
+	return generateTree(lengths, elements)
+}
+
+func generateTree(lengths []int, elements []uint64) (*huffmanNode, error) {
 
 	// 1) Count the number of codes for each code length.
 
@@ -87,7 +95,7 @@ func generateTree(lengths []int) (*huffmanNode, error) {
 
 			code := fmt.Sprintf("%0"+fmt.Sprint(l)+"b", nextCode[l])
 			nextCode[l]++
-			element := uint64(n)
+			element := elements[n]
 
 			if err := root.insertElement(code, element); err != nil {
 				return nil, err

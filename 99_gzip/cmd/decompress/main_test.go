@@ -32,7 +32,7 @@ func Test_decompressor_parseLength(t *testing.T) {
 				info:    tt.fields.info,
 				ostream: tt.fields.ostream,
 			}
-			if got := d.parseFixedHuffmanLength(tt.args.val); got != tt.want {
+			if got, _ := d.parseFixedHuffmanLength(tt.args.val); got != tt.want {
 				t.Errorf("decompressor.parseLength() = %v, want %v", got, tt.want)
 			}
 		})

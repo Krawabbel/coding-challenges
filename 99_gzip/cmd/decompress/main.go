@@ -132,36 +132,82 @@ func (d *decompressor) repeat(start int, length int) {
 
 var clenIdxs = []int{16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15}
 
-func (d *decompressor) parseDynamicHuffmanCodeLengths() {
+func (d *decompressor) parseDynamicHuffmanCodeLengths() error {
 	debugln(" -> dynamic huffman compression")
 
-	{
-		hlit := d.istream.nextBitsRev(5)
-		nlit := int(hlit) + 257
-		debugln(" -> hlit:", hlit, "-> nlit:", nlit)
-	}
-	{
-		hdist := d.istream.nextBitsRev(5)
-		ndist := int(hdist) + 1
-		debugln(" -> hdist:", hdist, "-> ndist:", ndist)
-	}
-	{
-		hclen := d.istream.nextBitsRev(4)
-		nclen := int(hclen) + 4
-		debugln(" -> hclen:", hclen, "-> nclen:", nclen)
+	nextBits := d.istream.nextBitsLowFirst
+	hlit := nextBits(5)
+	nlit := int(hlit) + 257
+	debugln(" -> hlit:", hlit, "-> nlit:", nlit)
 
-		clens := make([]uint64, 19)
-		for _, idx := range clenIdxs {
-			clens[idx] = d.istream.nextBitsRev(3)
-		}
-		debugln(" -> clens:", clens)
+	hdist := nextBits(5)
+	ndist := int(hdist) + 1
+	debugln(" -> hdist:", hdist, "-> ndist:", ndist)
+
+	hclen := nextBits(4)
+	nclen := int(hclen) + 4
+	debugln(" -> hclen:", hclen, "-> nclen:", nclen)
+
+	clens := make([]int, 19)
+	for i := range nclen {
+		clen := nextBits(3)
+		idx := clenIdxs[i]
+		clens[idx] = int(clen)
 	}
+
+	debugln(" -> clens:", clens)
+
+	codeLengthElements := make([]uint64, 0)
+	codeLengthCodeLengths := make([]int, 0)
+	for i, clen := range clens {
+		if clen != 0 {
+			codeLengthElements = append(codeLengthElements, uint64(i))
+			codeLengthCodeLengths = append(codeLengthCodeLengths, clen)
+		}
+	}
+
+	codeLengthTree, err := generateTree(codeLengthCodeLengths, codeLengthElements)
+	if err != nil {
+		return err
+	}
+
+	litClens := make([]int, nlit)
+	for i := range litClens {
+		litClen := codeLengthTree.getElement(d.istream)
+		litClens[i] = int(litClen)
+	}
+	debugln(" -> litClens:", litClens)
+
+	distClens := make([]int, ndist)
+	for i := range distClens {
+		distClen := codeLengthTree.getElement(d.istream)
+		distClens[i] = int(distClen)
+	}
+	debugln(" -> distClens:", distClens)
+
+	litTree, err := generateTreeNumbered(litClens)
+	if err != nil {
+		return err
+	}
+
+	distTree, err := generateTreeNumbered(distClens)
+	if err != nil {
+		return err
+	}
+
+	panic("GOT HERE")
+
+	fmt.Println(litTree.element, distTree.element)
+
+	return nil
 
 }
 
-func (d *decompressor) parseDynamicHuffmanCodes() {
+func (d *decompressor) parseDynamicHuffmanCodes() error {
 
-	d.parseDynamicHuffmanCodeLengths()
+	if err := d.parseDynamicHuffmanCodeLengths(); err != nil {
+		return err
+	}
 
 	panic("not yet implemented: dynamic Huffman codes")
 }
@@ -171,7 +217,7 @@ func (d *decompressor) parseBlock() (bool, error) {
 	// read block header
 	bfinal := d.istream.nextBool()
 
-	btype := d.istream.nextBits(2)
+	btype := d.istream.nextBitsLowFirst(2)
 
 	switch btype {
 	case 0b00:
@@ -179,9 +225,13 @@ func (d *decompressor) parseBlock() (bool, error) {
 			return false, err
 		}
 	case 0b01:
-		d.parseFixedHuffmanCodes()
+		if err := d.parseFixedHuffmanCodes(); err != nil {
+			return false, err
+		}
 	case 0b10:
-		d.parseDynamicHuffmanCodes()
+		if err := d.parseDynamicHuffmanCodes(); err != nil {
+			return false, err
+		}
 	case 0b11:
 		return false, corruptFileError("unexpected BTYPE 0b11")
 	}

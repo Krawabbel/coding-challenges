@@ -1,10 +1,14 @@
 package main
 
-func (d *decompressor) parseFixedHuffmanCodes() {
+func (d *decompressor) parseFixedHuffmanCodes() error {
+	return d.parseHuffmanCodes(fixedHuffmanCodes)
+}
+
+func (d *decompressor) parseHuffmanCodes(litTree *huffmanNode) error {
 	debugln(" -> fixed huffman compression")
 	for {
 
-		val := fixedHuffmanCodes.getElement(d.istream)
+		val := litTree.getElement(d.istream)
 
 		debug(" -> ", val, " -> ")
 
@@ -14,10 +18,16 @@ func (d *decompressor) parseFixedHuffmanCodes() {
 			debugln("end-of-block")
 			break // end-of-block
 		} else {
-			length := d.parseFixedHuffmanLength(val)
+			length, err := d.parseFixedHuffmanLength(val)
+			if err != nil {
+				return err
+			}
 			debugln(" -> length:", length)
 
-			distance := d.parseFixedHuffmanDistance()
+			distance, err := d.parseFixedHuffmanDistance()
+			if err != nil {
+				return err
+			}
 			debugln(" -> distance:", distance)
 
 			debugf(" -> <l:%d, d:%d>\n", length, distance)
@@ -27,12 +37,15 @@ func (d *decompressor) parseFixedHuffmanCodes() {
 		}
 		debugln()
 	}
+
+	return nil
 }
 
 var fixedHuffmanCodes *huffmanNode
 
 func initFixedHuffmanCodes() (err error) {
-	fixedHuffmanCodeLengths := make([]int, 288)
+	N := 288
+	fixedHuffmanCodeLengths := make([]int, N)
 	for i := 0; i <= 143; i++ {
 		fixedHuffmanCodeLengths[i] = 8
 	}
@@ -46,7 +59,7 @@ func initFixedHuffmanCodes() (err error) {
 		fixedHuffmanCodeLengths[i] = 8
 	}
 
-	fixedHuffmanCodes, err = generateTree(fixedHuffmanCodeLengths)
+	fixedHuffmanCodes, err = generateTreeNumbered(fixedHuffmanCodeLengths)
 
 	return err
 }
@@ -57,10 +70,10 @@ var baseFixedHuffmanDistances = []uint64{
 	1025, 1537, 2049, 3073, 4097, 6145, 8193, 12289, 16385, 24577,
 }
 
-func (d *decompressor) parseFixedHuffmanDistance() int {
-	distcode := d.istream.nextBitsRev(5)
+func (d *decompressor) parseFixedHuffmanDistance() (int, error) {
+	distcode := d.istream.nextBitsHighFirst(5)
 	if distcode > 29 {
-		panic("unexpected distcode")
+		return 0, corruptFileError("unexpected distcode")
 	}
 
 	nExtraBits := 0
@@ -72,10 +85,10 @@ func (d *decompressor) parseFixedHuffmanDistance() int {
 	debugln(" -> # extra bits:", nExtraBits)
 	debugln(" -> base dist ", baseFixedHuffmanDistances[distcode])
 
-	extraBits := d.istream.nextBits(nExtraBits)
+	extraBits := d.istream.nextBitsLowFirst(nExtraBits)
 	debugln(" -> extra bits ", extraBits)
 
-	return int(baseFixedHuffmanDistances[distcode] + extraBits)
+	return int(baseFixedHuffmanDistances[distcode] + extraBits), nil
 }
 
 var baseFixedHuffmanLengths = []uint64{
@@ -88,10 +101,10 @@ var baseFixedHuffmanLengths = []uint64{
 	258,
 }
 
-func (d *decompressor) parseFixedHuffmanLength(lencode uint64) int {
+func (d *decompressor) parseFixedHuffmanLength(lencode uint64) (int, error) {
 
 	if lencode < 257 || lencode > 285 {
-		panic("unexpected lencode")
+		return 0, corruptFileError("unexpected lencode")
 	}
 
 	nExtraBits := 0
@@ -105,8 +118,8 @@ func (d *decompressor) parseFixedHuffmanLength(lencode uint64) int {
 	baseLength := baseFixedHuffmanLengths[lencode-257]
 	debugln(" -> base length ", baseLength)
 
-	extraBits := d.istream.nextBits(nExtraBits)
+	extraBits := d.istream.nextBitsLowFirst(nExtraBits)
 	debugln(" -> extra bits ", extraBits)
 
-	return int(baseLength + extraBits)
+	return int(baseLength + extraBits), nil
 }
