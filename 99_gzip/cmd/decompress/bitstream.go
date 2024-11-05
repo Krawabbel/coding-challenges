@@ -14,6 +14,7 @@ func newBitstream(data []byte) *bitstream {
 
 func (s *bitstream) skipToNextByte() {
 	for (s.ptr % 8) > 0 {
+		debug('x')
 		s.ptr++
 	}
 }
@@ -45,7 +46,7 @@ func (s *bitstream) nextBool() bool {
 }
 
 func (s *bitstream) nextByte() byte {
-	return byte(s.nextBitsLowFirst(8))
+	return byte(s.nextBits(8))
 }
 
 func (s *bitstream) nextBytes(n int) []byte {
@@ -63,21 +64,11 @@ func (s *bitstream) nextBit() uint64 {
 	return 0
 }
 
-func (s *bitstream) nextBitsLowFirst(n int) uint64 {
+func (s *bitstream) nextBits(n int) uint64 {
 	bits := uint64(0)
 
 	for i := 0; i < n; i++ {
 		bits |= (s.nextBit() << i)
-	}
-
-	return bits
-}
-
-func (s *bitstream) nextBitsHighFirst(n int) uint64 {
-	bits := uint64(0)
-
-	for i := 0; i < n; i++ {
-		bits |= (s.nextBit() << (n - i - 1))
 	}
 
 	return bits

@@ -24,7 +24,7 @@ func Test_bitstream_nextBits(t *testing.T) {
 			s := &bitstream{
 				data: tt.fields.data,
 			}
-			if got := s.nextBitsLowFirst(tt.args.n); got != tt.want {
+			if got := s.nextBits(tt.args.n); got != tt.want {
 				t.Errorf("bitstream.nextBits() = %08b, want %08b", got, tt.want)
 			}
 		})

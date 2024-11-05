@@ -10,14 +10,16 @@ type huffmanNode struct {
 	left, right *huffmanNode
 }
 
-func (node *huffmanNode) getElement(s *bitstream) uint64 {
-	if node.isLeaf {
-		return node.element
+func (n *huffmanNode) getElement(s *bitstream) uint64 {
+	// fmt.Printf("node: %+v\n", n)
+
+	if n.isLeaf {
+		return n.element
 	}
 	if s.nextBool() {
-		return node.right.getElement(s)
+		return n.right.getElement(s)
 	}
-	return node.left.getElement(s)
+	return n.left.getElement(s)
 }
 
 func (n *huffmanNode) insertElement(code uint64, clen int, element uint64) error {
@@ -35,31 +37,21 @@ func (n *huffmanNode) insertElement(code uint64, clen int, element uint64) error
 		return fmt.Errorf("attempting to insert into leaf node")
 	}
 
-	if n.right == nil {
-		n.right = new(huffmanNode)
-	}
-
-	if n.left == nil {
-		n.left = new(huffmanNode)
-	}
-
 	if (code & (1 << (clen - 1))) > 0 {
+		if n.right == nil {
+			n.right = new(huffmanNode)
+		}
 		return n.right.insertElement(code, clen-1, element)
 	} else {
+		if n.left == nil {
+			n.left = new(huffmanNode)
+		}
 		return n.left.insertElement(code, clen-1, element)
 	}
 
 }
 
-func generateTreeNumbered(lengths []int) (*huffmanNode, error) {
-	elements := make([]uint64, len(lengths))
-	for i := range elements {
-		elements[i] = uint64(i)
-	}
-	return generateTree(lengths, elements)
-}
-
-func generateTree(tree_len []int, elements []uint64) (*huffmanNode, error) {
+func generateTree(tree_len []int) (*huffmanNode, error) {
 
 	// 1) Count the number of codes for each code length.
 
@@ -93,12 +85,13 @@ func generateTree(tree_len []int, elements []uint64) (*huffmanNode, error) {
 			tree_code := next_code[l]
 			next_code[l]++
 
-			if err := root.insertElement(tree_code, l, elements[n]); err != nil {
+			element := uint64(n)
+			if err := root.insertElement(tree_code, l, element); err != nil {
 				return nil, err
 			}
 
 			str_code := fmt.Sprintf("%0"+fmt.Sprint(l)+"b", tree_code)
-			debugf("%3d: symbol: %3d, Length: %2d, Code %s\n", n, elements[n], l, str_code)
+			debugf("%3d: symbol: %3d, Length: %2d, Code %s\n", n, element, l, str_code)
 			if len(str_code) != l {
 				panic("len(str_code) != l")
 			}
@@ -109,19 +102,19 @@ func generateTree(tree_len []int, elements []uint64) (*huffmanNode, error) {
 	return root, nil
 }
 
-func (d *decompressor) parseHuffmanCodes(litValCodes, distCodes *huffmanNode) error {
+func (d *decompressor) parseHuffmanCodes(litValTree, distTree *huffmanNode) error {
 
 	for {
 
-		litValCode := litValCodes.getElement(d.istream)
+		litValCode := litValTree.getElement(d.istream)
 
-		debug(" -> ", litValCode, " -> ")
+		debug(" -> ", litValCode, " (", hex(litValCode), ")")
 
 		if litValCode < 256 {
 			literal := byte(litValCode)
 			d.push(literal) // literal
 		} else if litValCode == 256 {
-			debugln("end-of-block")
+			debugln(" -> end-of-block")
 			break // end-of-block
 		} else {
 			length, err := d.parseHuffmanLength(litValCode)
@@ -130,9 +123,7 @@ func (d *decompressor) parseHuffmanCodes(litValCodes, distCodes *huffmanNode) er
 			}
 			debugln(" -> length:", length)
 
-			distcode := distCodes.getElement(d.istream)
-
-			distance, err := d.parseHuffmanDistance(distcode)
+			distance, err := d.parseHuffmanDistance(distTree)
 			if err != nil {
 				return err
 			}
@@ -172,13 +163,12 @@ func (d *decompressor) parseHuffmanLength(lencode uint64) (int, error) {
 	}
 
 	debugln(" -> lencode", lencode)
-	debugln(" -> # extra bits", nExtraBits)
-
 	baseLength := baseHuffmanLengths[lencode-257]
 	debugln(" -> base length ", baseLength)
 
-	extraBits := d.nextBits(nExtraBits)
-	debugln(" -> extra bits ", extraBits)
+	debug(" -> # extra bits = ", nExtraBits, " -> ")
+	extraBits := d.istream.nextBits(nExtraBits)
+	debugln(" -> extra bit value =", extraBits)
 
 	return int(baseLength + extraBits), nil
 }
@@ -189,7 +179,9 @@ var baseHuffmanDistances = []uint64{
 	1025, 1537, 2049, 3073, 4097, 6145, 8193, 12289, 16385, 24577,
 }
 
-func (d *decompressor) parseHuffmanDistance(distcode uint64) (int, error) {
+func (d *decompressor) parseHuffmanDistance(distTree *huffmanNode) (int, error) {
+
+	distcode := distTree.getElement(d.istream)
 
 	if distcode > 29 {
 		return 0, corruptFileError("unexpected distcode")
@@ -201,11 +193,11 @@ func (d *decompressor) parseHuffmanDistance(distcode uint64) (int, error) {
 	}
 
 	debugln(" -> distcode:", distcode)
-	debugln(" -> # extra bits:", nExtraBits)
 	debugln(" -> base dist ", baseHuffmanDistances[distcode])
 
-	extraBits := d.nextBits(nExtraBits)
-	debugln(" -> extra bits ", extraBits)
+	debug(" -> # extra bits = ", nExtraBits, " -> ")
+	extraBits := d.istream.nextBits(nExtraBits)
+	debugln(" -> extra bit value =", extraBits)
 
 	return int(baseHuffmanDistances[distcode] + extraBits), nil
 }

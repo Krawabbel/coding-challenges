@@ -6,11 +6,8 @@ var (
 )
 
 func (d *decompressor) parseFixedHuffmanCodes() error {
-
 	debugln(" -> fixed huffman compression")
-
 	return d.parseHuffmanCodes(fixedHuffmanLitValCodes, fixedHuffmanDistCodes)
-
 }
 
 func initFixedHuffmanLitValCodes() (err error) {
@@ -29,7 +26,7 @@ func initFixedHuffmanLitValCodes() (err error) {
 		fixedHuffmanLitValCodeLengths[i] = 8
 	}
 
-	fixedHuffmanLitValCodes, err = generateTreeNumbered(fixedHuffmanLitValCodeLengths)
+	fixedHuffmanLitValCodes, err = generateTree(fixedHuffmanLitValCodeLengths)
 
 	return err
 }
@@ -41,7 +38,7 @@ func initFixedHuffmanDistCodes() (err error) {
 		fixedHuffmanDistCodeLengths[i] = 5
 	}
 
-	fixedHuffmanDistCodes, err = generateTreeNumbered(fixedHuffmanDistCodeLengths)
+	fixedHuffmanDistCodes, err = generateTree(fixedHuffmanDistCodeLengths)
 
 	return err
 }
