@@ -14,10 +14,14 @@ const (
 	maxHistoryLength = 0x8000
 )
 
-var DEBUG = true
+var DEBUG = false
 
 func init() {
-	if err := initFixedHuffmanCodes(); err != nil {
+	if err := initFixedHuffmanLitValCodes(); err != nil {
+		panic(err)
+	}
+
+	if err := initFixedHuffmanDistCodes(); err != nil {
 		panic(err)
 	}
 }
@@ -130,86 +134,138 @@ func (d *decompressor) repeat(start int, length int) {
 	}
 }
 
-var clenIdxs = []int{16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15}
-
-func (d *decompressor) parseDynamicHuffmanCodeLengths() error {
-	debugln(" -> dynamic huffman compression")
-
-	nextBits := d.istream.nextBitsLowFirst
-	hlit := nextBits(5)
-	nlit := int(hlit) + 257
-	debugln(" -> hlit:", hlit, "-> nlit:", nlit)
-
-	hdist := nextBits(5)
-	ndist := int(hdist) + 1
-	debugln(" -> hdist:", hdist, "-> ndist:", ndist)
-
-	hclen := nextBits(4)
-	nclen := int(hclen) + 4
-	debugln(" -> hclen:", hclen, "-> nclen:", nclen)
-
-	clens := make([]int, 19)
-	for i := range nclen {
-		clen := nextBits(3)
-		idx := clenIdxs[i]
-		clens[idx] = int(clen)
-	}
-
-	debugln(" -> clens:", clens)
-
-	codeLengthElements := make([]uint64, 0)
-	codeLengthCodeLengths := make([]int, 0)
-	for i, clen := range clens {
-		if clen != 0 {
-			codeLengthElements = append(codeLengthElements, uint64(i))
-			codeLengthCodeLengths = append(codeLengthCodeLengths, clen)
-		}
-	}
-
-	codeLengthTree, err := generateTree(codeLengthCodeLengths, codeLengthElements)
-	if err != nil {
-		return err
-	}
-
-	litClens := make([]int, nlit)
-	for i := range litClens {
-		litClen := codeLengthTree.getElement(d.istream)
-		litClens[i] = int(litClen)
-	}
-	debugln(" -> litClens:", litClens)
-
-	distClens := make([]int, ndist)
-	for i := range distClens {
-		distClen := codeLengthTree.getElement(d.istream)
-		distClens[i] = int(distClen)
-	}
-	debugln(" -> distClens:", distClens)
-
-	litTree, err := generateTreeNumbered(litClens)
-	if err != nil {
-		return err
-	}
-
-	distTree, err := generateTreeNumbered(distClens)
-	if err != nil {
-		return err
-	}
-
-	panic("GOT HERE")
-
-	fmt.Println(litTree.element, distTree.element)
-
-	return nil
-
+func (d *decompressor) nextBits(n int) uint64 {
+	return d.istream.nextBitsLowFirst(n)
 }
+
+var clenIdxs = []int{16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15}
 
 func (d *decompressor) parseDynamicHuffmanCodes() error {
 
-	if err := d.parseDynamicHuffmanCodeLengths(); err != nil {
+	debugln(" -> dynamic huffman compression")
+
+	hlit := d.nextBits(5)
+	nlit := int(hlit) + 257
+	debugln(" -> hlit:", hlit, "-> nlit:", nlit)
+
+	hdist := d.nextBits(5)
+	ndist := int(hdist) + 1
+	debugln(" -> hdist:", hdist, "-> ndist:", ndist)
+
+	hclen := d.nextBits(4)
+	nclen := int(hclen) + 4
+	debugln(" -> hclen:", hclen, "-> nclen:", nclen)
+
+	clcLens := make([]int, 19)
+	for i := range nclen {
+		clen := d.nextBits(3)
+		idx := clenIdxs[i]
+		clcLens[idx] = int(clen)
+	}
+
+	debugln(" -> clens:", clcLens)
+
+	// codeLengthElements := make([]uint64, 0)
+	// codeLengthCodeLengths := make([]int, 0)
+	// for i, clen := range clens {
+	// 	if clen != 0 {
+	// 		codeLengthElements = append(codeLengthElements, uint64(i))
+	// 		codeLengthCodeLengths = append(codeLengthCodeLengths, clen)
+	// 	}
+	// }
+
+	clcTree, err := generateTreeNumbered(clcLens)
+	if err != nil {
 		return err
 	}
 
-	panic("not yet implemented: dynamic Huffman codes")
+	debugln(" => literal/value tree")
+
+	litValTree, err := d.decodeTree(clcTree, nlit)
+	if err != nil {
+		return err
+	}
+
+	debugln(" => distance tree")
+
+	distTree, err := d.decodeTree(clcTree, ndist)
+	if err != nil {
+		return err
+	}
+
+	for {
+
+		litValCode := litValTree.getElement(d.istream)
+
+		debug(" -> ", litValCode, " (", hex(litValCode), ") -> ")
+
+		if litValCode < 256 {
+			literal := byte(litValCode)
+			d.push(literal) // literal
+		} else if litValCode == 256 {
+			debugln("end-of-block")
+			break // end-of-block
+		} else {
+			length, err := d.parseHuffmanLength(litValCode)
+			if err != nil {
+				return err
+			}
+			debugln(" -> length:", length)
+
+			distcode := distTree.getElement(d.istream)
+			distance, err := d.parseHuffmanDistance(distcode)
+			if err != nil {
+				return err
+			}
+			debugln(" -> distance:", distance)
+
+			debugf(" -> <l:%d, d:%d>\n", length, distance)
+
+			d.repeat(len(d.history)-distance, length)
+
+			panic("not yet implemented: dynamic Huffman codes")
+
+		}
+		debugln()
+	}
+
+	return nil
+}
+
+func (d *decompressor) decodeTree(clcTree *huffmanNode, n int) (*huffmanNode, error) {
+
+	codeLengths := make([]int, n)
+	for i := 0; i < n; {
+		codeLengthCode := clcTree.getElement(d.istream)
+		switch {
+		case codeLengthCode < 16:
+			codeLengths[i] = int(codeLengthCode)
+			i++
+		case codeLengthCode == 16:
+			replen := d.nextBits(2) + 3
+			last := codeLengths[len(codeLengths)-1]
+			for range replen {
+				codeLengths[i] = last
+				i++
+			}
+		case codeLengthCode == 17:
+			replen := d.nextBits(3) + 3
+			for range replen {
+				codeLengths[i] = 0
+				i++
+			}
+		case codeLengthCode == 18:
+			replen := d.nextBits(7) + 11
+			for range replen {
+				codeLengths[i] = 0
+				i++
+			}
+		}
+	}
+
+	debugf(" -> code lengths (# = %d): %v\n", len(codeLengths), codeLengths)
+
+	return generateTreeNumbered(codeLengths)
 }
 
 func (d *decompressor) parseBlock() (bool, error) {
@@ -217,7 +273,7 @@ func (d *decompressor) parseBlock() (bool, error) {
 	// read block header
 	bfinal := d.istream.nextBool()
 
-	btype := d.istream.nextBitsLowFirst(2)
+	btype := d.nextBits(2)
 
 	switch btype {
 	case 0b00:

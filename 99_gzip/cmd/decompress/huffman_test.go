@@ -32,7 +32,7 @@ func (n *huffmanNode) get(code string) (uint64, error) {
 
 func TestNilNode(t *testing.T) {
 	n := new(huffmanNode)
-	n.insertElement("101", 12)
+	n.insertElement(0b101, 3, 12)
 	val, err := n.get("101")
 	if err != nil {
 		t.Fatal(err)
@@ -41,4 +41,23 @@ func TestNilNode(t *testing.T) {
 		t.Fatal(val)
 	}
 
+}
+
+func Test_generateTree(t *testing.T) {
+	tree_len := []int{3, 3, 3, 3, 3, 2, 4, 4}
+	root, err := generateTreeNumbered(tree_len)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	codes := []string{"010", "011", "100", "101", "110", "00", "1110", "1111"}
+
+	for i, code := range codes {
+		want := uint64(i)
+		if have, err := root.get(code); err != nil {
+			t.Fatal(err)
+		} else if have != want {
+			t.Fatalf("fail for '%s': have %d, got %d", string(byte(have)+'A'), have, want)
+		}
+	}
 }
