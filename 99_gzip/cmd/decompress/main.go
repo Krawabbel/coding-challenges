@@ -17,7 +17,7 @@ const (
 var DEBUG = false
 
 func init() {
-	if err := initFixedHuffmanLitValCodes(); err != nil {
+	if err := initFixedHuffmanlitCodes(); err != nil {
 		panic(err)
 	}
 

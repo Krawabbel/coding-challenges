@@ -102,31 +102,41 @@ func generateTree(tree_len []int) (*huffmanNode, error) {
 	return root, nil
 }
 
-func (d *decompressor) parseHuffmanCodes(litValTree, distTree *huffmanNode) error {
+func (d *decompressor) parseHuffmanCodes(litTree, distTree *huffmanNode) error {
 
 	for {
 
-		litValCode := litValTree.getElement(d.istream)
+		litCode := litTree.getElement(d.istream)
 
-		debug(" -> ", litValCode, " (", hex(litValCode), ")")
+		debug(" -> ", litCode, " (", hex(litCode), ")")
 
-		if litValCode < 256 {
-			literal := byte(litValCode)
+		if litCode < 256 {
+			literal := byte(litCode)
 			d.push(literal) // literal
-		} else if litValCode == 256 {
+		} else if litCode == 256 {
 			debugln(" -> end-of-block")
 			break // end-of-block
 		} else {
-			length, err := d.parseHuffmanLength(litValCode)
+			length, err := d.parseHuffmanLength(litCode)
 			if err != nil {
 				return err
 			}
 			debugln(" -> length:", length)
 
-			distance, err := d.parseHuffmanDistance(distTree)
-			if err != nil {
-				return err
+			// distance, err := d.parseHuffmanDistance(distTree)
+			// if err != nil {
+			// 	return err
+			// }
+
+			distance := 64 - 8 - 7
+
+			if length != 7 {
+				panic("GOT HERE")
 			}
+
+			// 0 .. 6
+			debugln("+++ ", bin(d.istream.nextBits(7+4)))
+
 			debugln(" -> distance:", distance)
 
 			debugf(" -> <l:%d, d:%d>\n", length, distance)

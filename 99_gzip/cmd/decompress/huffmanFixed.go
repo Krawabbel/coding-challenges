@@ -1,32 +1,32 @@
 package main
 
 var (
-	fixedHuffmanLitValCodes *huffmanNode
-	fixedHuffmanDistCodes   *huffmanNode
+	fixedHuffmanlitCodes  *huffmanNode
+	fixedHuffmanDistCodes *huffmanNode
 )
 
 func (d *decompressor) parseFixedHuffmanCodes() error {
 	debugln(" -> fixed huffman compression")
-	return d.parseHuffmanCodes(fixedHuffmanLitValCodes, fixedHuffmanDistCodes)
+	return d.parseHuffmanCodes(fixedHuffmanlitCodes, fixedHuffmanDistCodes)
 }
 
-func initFixedHuffmanLitValCodes() (err error) {
+func initFixedHuffmanlitCodes() (err error) {
 	N := 288
-	fixedHuffmanLitValCodeLengths := make([]int, N)
+	fixedHuffmanlitCodeLengths := make([]int, N)
 	for i := 0; i <= 143; i++ {
-		fixedHuffmanLitValCodeLengths[i] = 8
+		fixedHuffmanlitCodeLengths[i] = 8
 	}
 	for i := 144; i <= 255; i++ {
-		fixedHuffmanLitValCodeLengths[i] = 9
+		fixedHuffmanlitCodeLengths[i] = 9
 	}
 	for i := 256; i <= 279; i++ {
-		fixedHuffmanLitValCodeLengths[i] = 7
+		fixedHuffmanlitCodeLengths[i] = 7
 	}
 	for i := 280; i <= 287; i++ {
-		fixedHuffmanLitValCodeLengths[i] = 8
+		fixedHuffmanlitCodeLengths[i] = 8
 	}
 
-	fixedHuffmanLitValCodes, err = generateTree(fixedHuffmanLitValCodeLengths)
+	fixedHuffmanlitCodes, err = generateTree(fixedHuffmanlitCodeLengths)
 
 	return err
 }

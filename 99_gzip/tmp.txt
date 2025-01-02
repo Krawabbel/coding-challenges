@@ -73591,7 +73591,7 @@ subscribe to our email newsletter to hear about new eBooks.
 
 ﻿The Project Gutenberg eBook of Les Misérables, by Victor Hugo
 
-This
+This eBook 
 
 11111000 11010001 00010000 00010000 01110010 11101011 11100100 11100110 00000000 11000000 00110110 11110110 01110110 11100110 01110100 00101110 00011110 00101110 00000000 [INFO] mtime: '2024-11-03 21:04:30 +0100 CET' [50 48 50 52 45 49 49 45 48 51 32 50 49 58 48 52 58 51 48 32 43 48 49 48 48 32 67 69 84]
 [INFO] os: '0x03' [48 120 48 51]
@@ -73825,4 +73825,11 @@ This
  -> base length  7
  -> # extra bits = 0 ->  -> extra bit value = 0
  -> length: 7
-11
+111100 00000+++  0b1111
+ -> distance: 49
+ -> <l:7, d:49>
+' ''e''B''o''o''k'' '
+001  -> 258 (0x102) -> lencode 258
+ -> base length  4
+ -> # extra bits = 0 ->  -> extra bit value = 0
+ -> length: 4

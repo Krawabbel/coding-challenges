@@ -34,7 +34,7 @@ func (d *decompressor) parseDynamicHuffmanCodes() error {
 
 	debugln(" => literal/value tree")
 
-	litValTree, err := d.parseAndDecodeDynamicHuffmanTree(clTree, nlit)
+	litTree, err := d.parseAndDecodeDynamicHuffmanTree(clTree, nlit)
 	if err != nil {
 		return err
 	}
@@ -46,7 +46,7 @@ func (d *decompressor) parseDynamicHuffmanCodes() error {
 		return err
 	}
 
-	return d.parseHuffmanCodes(litValTree, distTree)
+	return d.parseHuffmanCodes(litTree, distTree)
 }
 
 func (d *decompressor) parseAndDecodeDynamicHuffmanTree(cl *huffmanNode, n int) (*huffmanNode, error) {
