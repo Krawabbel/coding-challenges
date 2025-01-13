@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"os"
 	"os/exec"
 	"strings"
+	"sync"
 
 	"golang.org/x/sys/unix"
 )
@@ -70,12 +72,44 @@ func cd(s *shell, args []string) error {
 
 func (s *shell) run(line string) error {
 	s.histAdd(line)
-
-	return s.runCmd(line)
+	return s.runLine(line)
 }
 
-func (s *shell) runCmd(command string) error {
-	parts := strings.Split(command, " ")
+func (s *shell) runLine(line string) error {
+	cmds := strings.Split(line, "|")
+
+	var stdin io.Reader = os.Stdin
+	var wg sync.WaitGroup
+	for i, c := range cmds {
+		fmt.Fprint(os.Stderr, i, c, "\n")
+
+		wg.Add(1)
+		r, w := io.Pipe()
+
+		var stdout io.Writer
+		if i == len(cmds)-1 {
+			stdout = os.Stdout
+		} else {
+			stdout = bufio.NewWriter(w)
+		}
+
+		go func() {
+			defer wg.Done()
+			defer w.Close()
+			if err := s.runCmd(c, stdin, stdout); err != nil {
+				s.printErr(err)
+			}
+		}()
+
+		stdin = bufio.NewReader(r)
+	}
+
+	wg.Wait()
+	return nil
+}
+
+func (s *shell) runCmd(command string, stdin io.Reader, stdout io.Writer) error {
+	parts := strings.Split(strings.TrimSpace(command), " ")
 
 	name := parts[0]
 	args := parts[1:]
@@ -90,8 +124,8 @@ func (s *shell) runCmd(command string) error {
 		return cmd.Err
 	}
 
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
+	cmd.Stdin = stdin
+	cmd.Stdout = stdout
 	cmd.Stderr = os.Stderr
 
 	if err := cmd.Run(); err != nil {
