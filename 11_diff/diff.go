@@ -1,4 +1,4 @@
-package lcs
+package diff
 
 type node[T comparable] struct {
 	length int
@@ -49,4 +49,40 @@ func longer[T comparable](n1, n2 *node[T]) *node[T] {
 
 func lcsstr(s1, s2 string) string {
 	return string(lcsImpl([]byte(s1), []byte(s2)))
+}
+
+func Diff(s1, s2 []string) []string {
+
+	lcs := lcsImpl(s1, s2)
+
+	missing := make([]string, 0)
+	left := 0
+	right := 0
+	for i := 0; i < len(lcs); i++ {
+		next := lcs[i]
+
+		for left < len(s1) && s1[left] != next {
+			missing = append(missing, "< "+s1[left])
+			left++
+		}
+		left++
+
+		for right < len(s2) && s2[right] != next {
+			missing = append(missing, "> "+s2[right])
+			right++
+		}
+		right++
+	}
+
+	for left < len(s1) {
+		missing = append(missing, "< "+s1[left])
+		left++
+	}
+
+	for right < len(s2) {
+		missing = append(missing, "> "+s2[right])
+		right++
+	}
+
+	return missing
 }
